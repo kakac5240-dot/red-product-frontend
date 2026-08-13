@@ -52,7 +52,7 @@ function CreateHotel() {
         photoUrl = await uploadToCloudinary(photo)
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/hotels', {
+      const response = await fetch('https://red-product-backend-ddfy.onrender.com/api/hotels', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
