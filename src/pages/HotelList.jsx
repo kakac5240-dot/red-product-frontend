@@ -31,7 +31,7 @@ function HotelList() {
             <div key={hotel.id} className="bg-white rounded-lg overflow-hidden shadow-lg">
               {hotel.photo ? (
                 <img
-                  src={hotel.photo.startsWith('http') ? hotel.photo : `http://127.0.0.1:8000/storage/${hotel.photo}`}
+                  src={hotel.photo.startsWith('http') ? hotel.photo : `https://red-product-backend-ddfy.onrender.com/storage/${hotel.photo}`}
                   alt={hotel.nom}
                   className="h-40 w-full object-cover"
                 />
