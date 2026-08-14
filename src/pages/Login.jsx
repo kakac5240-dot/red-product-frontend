@@ -32,7 +32,7 @@ function Login() {
 
       const data = await response.json()
       localStorage.setItem('token', data.token)
-      navigate('/hotels')
+      navigate('/dashboard')
     } catch (err) {
       setError('E-mail ou mot de passe incorrect.')
     } finally {
