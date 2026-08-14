@@ -1,54 +1,143 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Sidebar from '../components/Sidebar'
+
+const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
+
+// Mapping des photos Figma exactes basées sur le nom de l'hôtel
+const FIGMA_IMAGES = {
+  'Hôtel Terrou-Bi': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+  'King Fahd Palace': 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+  'Radisson Blu Hotel': 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
+  'Pullman Dakar Teranga': 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80',
+  'Hôtel Lac Rose': 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+  'Hôtel Saly': 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
+  'Palm Beach Resort & Spa': 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
+  'Novotel Dakar': 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'
+}
 
 function HotelList() {
   const [hotels, setHotels] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('https://red-product-backend-ddfy.onrender.com/api/hotels')
+    fetch(`${API_BASE_URL}/api/hotels`)
       .then((res) => res.json())
-      .then((data) => setHotels(data))
-      .catch((err) => console.error(err))
+      .then((data) => {
+        setHotels(data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error(err)
+        setLoading(false)
+      })
   }, [])
 
-  return (
-    <div className="min-h-screen bg-gray-900 p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-white text-2xl font-bold">Liste des hôtels</h1>
-        <Link
-          to="/hotels/create"
-          className="bg-yellow-600 text-white px-4 py-2 rounded font-medium"
-        >
-          + Créer un nouvel hôtel
-        </Link>
-      </div>
+  // Donne l'image exacte Figma si le nom correspond, sinon prend la photo envoyée par l'API
+  const getHotelImage = (hotel) => {
+    if (FIGMA_IMAGES[hotel.nom]) {
+      return FIGMA_IMAGES[hotel.nom]
+    }
+    if (hotel.photo && !hotel.photo.includes('null')) {
+      return hotel.photo.startsWith('http')
+        ? hotel.photo
+        : `${API_BASE_URL}/storage/${hotel.photo}`
+    }
+    return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'
+  }
 
-      {hotels.length === 0 ? (
-        <p className="text-gray-400">Aucun hôtel pour le moment.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {hotels.map((hotel) => (
-            <div key={hotel.id} className="bg-white rounded-lg overflow-hidden shadow-lg">
-              {hotel.photo ? (
-                <img
-                  src={hotel.photo.startsWith('http') ? hotel.photo : `https://red-product-backend-ddfy.onrender.com/storage/${hotel.photo}`}
-                  alt={hotel.nom}
-                  className="h-40 w-full object-cover"
-                />
-              ) : (
-                <div className="h-40 bg-gray-300 flex items-center justify-center text-gray-500">
-                  Photo
-                </div>
-              )}
-              <div className="p-4">
-                <p className="text-xs text-gray-500 mb-1">{hotel.adresse}</p>
-                <h3 className="font-bold mb-1">{hotel.nom}</h3>
-                <p className="text-sm text-gray-700">{hotel.prix_par_nuit} {hotel.devise} par nuit</p>
-              </div>
+  return (
+    <div className="flex min-h-screen bg-gray-100">
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col">
+        {/* Topbar */}
+        <header className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-gray-800">Liste des hôtels</h1>
+          
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Recherche"
+                className="bg-gray-50 text-sm border border-gray-300 rounded-full py-2 px-4 pl-9 focus:outline-none focus:border-gray-400"
+              />
+              <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
-          ))}
+            
+            <button className="text-gray-500 hover:text-gray-700 relative">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
+            </button>
+
+            <div className="w-9 h-9 rounded-full bg-gray-300 overflow-hidden border">
+              <img src="https://i.pravatar.cc/100" alt="Avatar" className="w-full h-full object-cover" />
+            </div>
+          </div>
+        </header>
+
+        {/* Sous-header */}
+        <div className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-semibold text-gray-800">Hôtels</h2>
+            <span className="text-gray-400 text-lg font-medium">{hotels.length}</span>
+          </div>
+
+          <Link
+            to="/hotels/create"
+            className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-md text-sm flex items-center gap-2 shadow-sm"
+          >
+            <span className="text-lg leading-none">+</span> Créer un nouvel hôtel
+          </Link>
         </div>
-      )}
+
+        {/* Grille des cartes */}
+        <main className="p-8 flex-1">
+          {loading ? (
+            <div className="text-center py-12 text-gray-500">Chargement des hôtels...</div>
+          ) : hotels.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">Aucun hôtel disponible.</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {hotels.map((hotel) => {
+                const id = hotel._id || hotel.id
+                return (
+                  <div 
+                    key={id} 
+                    className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col"
+                  >
+                    {/* Image Figma */}
+                    <div className="h-44 w-full bg-gray-200">
+                      <img
+                        src={getHotelImage(hotel)}
+                        alt={hotel.nom}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Informations de la carte */}
+                    <div className="p-4 flex flex-col flex-1">
+                      <p className="text-xs text-red-500 font-medium mb-1 truncate">
+                        {hotel.adresse || 'Adresse non spécifiée'}
+                      </p>
+                      <h3 className="font-bold text-gray-900 text-base mb-1 truncate">
+                        {hotel.nom}
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-auto pt-2">
+                        <span className="font-semibold text-gray-900">{hotel.prix_par_nuit} {hotel.devise || 'F XOF'}</span> par nuit
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
