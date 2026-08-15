@@ -3,7 +3,7 @@ import Login from './pages/Login'
 import HotelList from './pages/HotelList'
 import CreateHotel from './pages/CreateHotel'
 import Dashboard from './pages/Dashboard'
-import { hotelsData } from '../data/hotelsData';
+import { hotelsData } from "./Data/hotelsData";
 
 function App() {
   return (
