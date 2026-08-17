@@ -4,16 +4,16 @@ import Sidebar from '../components/Sidebar'
 
 const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
 
-// Mapping des photos Figma exactes basées sur le nom de l'hôtel
+// Mapping direct vers tes images locales dans public/images/
 const FIGMA_IMAGES = {
-  'Hôtel Terrou-Bi': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
-  'King Fahd Palace': 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
-  'Radisson Blu Hotel': 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
-  'Pullman Dakar Teranga': 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80',
-  'Hôtel Lac Rose': 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
-  'Hôtel Saly': 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-  'Palm Beach Resort & Spa': 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
-  'Novotel Dakar': 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80'
+  'Hôtel Terrou-Bi': '/images/hotel-cart-1.png',
+  'King Fahd Palace': '/images/hotel-cart-2.png',
+  'Radisson Blu Hotel': '/images/hotel-cart-3.png',
+  'Pullman Dakar Teranga': '/images/hotel-cart-4.png',
+  'Hôtel Lac Rose': '/images/hotel-cart-5.png',
+  'Hôtel Saly': '/images/hotel-cart-6.png',
+  'Palm Beach Resort & Spa': '/images/hotel-cart-7.png',
+  'Novotel Dakar': '/images/hotel-cart-8.png'
 }
 
 function HotelList() {
@@ -33,8 +33,8 @@ function HotelList() {
       })
   }, [])
 
-  // Donne l'image exacte Figma si le nom correspond, sinon prend la photo envoyée par l'API
-  const getHotelImage = (hotel) => {
+  // Récupère l'image locale correspondante, ou prend une image selon l'index
+  const getHotelImage = (hotel, index) => {
     if (FIGMA_IMAGES[hotel.nom]) {
       return FIGMA_IMAGES[hotel.nom]
     }
@@ -43,7 +43,7 @@ function HotelList() {
         ? hotel.photo
         : `${API_BASE_URL}/storage/${hotel.photo}`
     }
-    return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'
+    return `/images/hotel-cart-${(index % 8) + 1}.png`
   }
 
   return (
@@ -103,17 +103,17 @@ function HotelList() {
             <div className="text-center py-12 text-gray-500">Aucun hôtel disponible.</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {hotels.map((hotel) => {
+              {hotels.map((hotel, index) => {
                 const id = hotel._id || hotel.id
                 return (
                   <div 
                     key={id} 
                     className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col"
                   >
-                    {/* Image Figma */}
+                    {/* Image PNG locale */}
                     <div className="h-44 w-full bg-gray-200">
                       <img
-                        src={getHotelImage(hotel)}
+                        src={getHotelImage(hotel, index)}
                         alt={hotel.nom}
                         className="w-full h-full object-cover"
                       />
