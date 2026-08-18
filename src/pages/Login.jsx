@@ -1,49 +1,144 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
 
 function Login() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [keepConnected, setKeepConnected] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    localStorage.setItem('token', 'fake-jwt-token')
-    navigate('/dashboard')
+    setError('')
+    setLoading(true)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Identifiants incorrects')
+      }
+
+      // Stockage du token de connexion
+      localStorage.setItem('token', data.token)
+      if (keepConnected) {
+        localStorage.setItem('keepConnected', 'true')
+      }
+
+      // Redirection vers la liste des hôtels
+      navigate('/hotels')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-[#45484B] flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-red-600 mb-6">RED PRODUCT</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-gray-900"
+      style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
+    >
+      {/* Logo RED PRODUCT en haut */}
+      <div className="flex items-center gap-3 mb-8">
+        <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+        <h1 className="text-2xl font-bold text-white tracking-wide uppercase">
+          RED PRODUCT
+        </h1>
+      </div>
+
+      {/* Carte du Formulaire */}
+      <div className="bg-white rounded-md shadow-2xl p-8 w-full max-w-md">
+        <h2 className="text-gray-700 text-sm font-medium mb-6 text-left">
+          Connectez-vous en tant que Admin
+        </h2>
+
+        {error && (
+          <div className="bg-red-50 text-red-500 text-sm p-3 rounded mb-4 border border-red-200">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
             <input
               type="email"
               required
+              placeholder="E-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full border-b border-gray-300 py-2 text-sm text-gray-800 focus:outline-none focus:border-gray-600 transition-colors"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
             <input
               type="password"
               required
+              placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full border-b border-gray-300 py-2 text-sm text-gray-800 focus:outline-none focus:border-gray-600 transition-colors"
             />
           </div>
+
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="keepConnected"
+              checked={keepConnected}
+              onChange={(e) => setKeepConnected(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-gray-700 focus:ring-0"
+            />
+            <label htmlFor="keepConnected" className="ml-2 text-xs text-gray-600 select-none">
+              Gardez-moi connecté
+            </label>
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition-colors"
+            disabled={loading}
+            className="w-full bg-gray-700 hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
           >
-            Se connecter
+            {loading ? 'Connexion en cours...' : 'Se connecter'}
           </button>
         </form>
+      </div>
+
+      {/* Liens sous la carte */}
+      <div className="mt-6 text-center space-y-3">
+        <div>
+          <Link 
+            to="/forgot-password" 
+            className="text-yellow-500 text-xs hover:underline font-medium"
+          >
+            Mot de passe oublié ?
+          </Link>
+        </div>
+        <div className="text-xs text-gray-300">
+          Vous n'avez pas de compte ?{' '}
+          <Link 
+            to="/register" 
+            className="text-yellow-500 hover:underline font-medium ml-1"
+          >
+            S'inscrire
+          </Link>
+        </div>
       </div>
     </div>
   )
