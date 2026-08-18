@@ -20,9 +20,7 @@ function Login() {
     try {
       const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       })
 
@@ -46,27 +44,30 @@ function Login() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-[#323537] overflow-hidden">
-      {/* Dessin SVG de fond (Motifs géométriques Figma) */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-[#45484B] overflow-hidden">
+      
+      {/* Motifs Géométriques Cercles Figma */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
         <svg
-          className="w-full h-full object-cover"
+          className="absolute w-[1200px] h-[1200px] text-white opacity-10"
           viewBox="0 0 1000 1000"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <circle cx="500" cy="500" r="450" stroke="white" strokeWidth="2" strokeDasharray="8 8" />
-          <circle cx="500" cy="500" r="380" stroke="white" strokeWidth="1.5" />
-          <circle cx="500" cy="500" r="300" stroke="white" strokeWidth="1" />
-          <circle cx="500" cy="500" r="220" stroke="white" strokeWidth="2" strokeDasharray="12 12" />
-          <path d="M-100 500 Q 250 200, 500 500 T 1100 500" stroke="white" strokeWidth="2" fill="none" />
-          <path d="M-100 600 Q 250 300, 500 600 T 1100 600" stroke="white" strokeWidth="1.5" fill="none" />
-          <path d="M-100 400 Q 250 100, 500 400 T 1100 400" stroke="white" strokeWidth="1" fill="none" />
+          {/* Cercles concentriques géométriques identiques à Figma */}
+          <circle cx="500" cy="500" r="100" stroke="currentColor" strokeWidth="30" />
+          <circle cx="500" cy="500" r="180" stroke="currentColor" strokeWidth="25" />
+          <circle cx="500" cy="500" r="260" stroke="currentColor" strokeWidth="20" />
+          <circle cx="500" cy="500" r="340" stroke="currentColor" strokeWidth="15" />
+          <circle cx="500" cy="500" r="420" stroke="currentColor" strokeWidth="10" />
+          <circle cx="500" cy="500" r="500" stroke="currentColor" strokeWidth="8" />
+          <circle cx="500" cy="500" r="580" stroke="currentColor" strokeWidth="5" />
         </svg>
       </div>
 
-      {/* Content / Formulaire */}
+      {/* Contenu principal */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
+        
         {/* Logo RED PRODUCT */}
         <div className="flex items-center gap-3 mb-8">
           <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -77,7 +78,7 @@ function Login() {
           </h1>
         </div>
 
-        {/* Carte du Formulaire */}
+        {/* Carte unique de connexion */}
         <div className="bg-white rounded-md shadow-2xl p-8 w-full">
           <h2 className="text-gray-700 text-sm font-medium mb-6 text-left">
             Connectez-vous en tant que Admin
@@ -128,14 +129,14 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#323537] hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
+              className="w-full bg-[#45484B] hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
             >
               {loading ? 'Connexion en cours...' : 'Se connecter'}
             </button>
           </form>
         </div>
 
-        {/* Liens sous la carte */}
+        {/* Liens bas de page */}
         <div className="mt-6 text-center space-y-3">
           <div>
             <Link 
