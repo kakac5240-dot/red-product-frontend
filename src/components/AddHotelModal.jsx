@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
 
-// 8 Modèles d'hôtels du Sénégal
+// Modèles d'hôtels pré-remplis
 const HOTEL_MODELS = [
   {
     name: 'Hôtel Teranga Dakar',
@@ -78,12 +78,12 @@ const HOTEL_MODELS = [
   },
 ]
 
-function CreateHotel({ isOpen, onClose, onHotelAdded }) {
+function AddHotelModal({ isOpen, onClose, onHotelAdded }) {
   const [formData, setFormData] = useState(HOTEL_MODELS[0])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // Choisit un modèle parmi les 8 à chaque ouverture
+  // Choisir un modèle parmi les 8 à chaque ouverture du modal
   useEffect(() => {
     if (isOpen) {
       const randomIndex = Math.floor(Math.random() * HOTEL_MODELS.length)
@@ -132,7 +132,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden border border-gray-100">
-        {/* Entête */}
+        {/* Header Modal */}
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-bold text-gray-800">
             Créer un nouvel hôtel
@@ -279,4 +279,4 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
   )
 }
 
-export default CreateHotel
+export default AddHotelModal
