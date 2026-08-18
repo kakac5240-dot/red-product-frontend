@@ -10,19 +10,23 @@ function Sidebar() {
       className="w-64 min-h-screen text-white flex flex-col justify-between p-6 bg-cover bg-center bg-no-repeat bg-[#323537] relative"
       style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
     >
-      {/* Superposition sombre légère pour assurer la lisibilité du texte */}
+      {/* Superposition sombre pour garder la lisibilité du texte */}
       <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
       <div className="relative z-10">
-        {/* Header / Logo */}
+        {/* Logo RED PRODUCT */}
         <div className="flex items-center gap-3 mb-10">
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <h1 className="text-lg font-bold tracking-wider uppercase">RED PRODUCT</h1>
+          <img 
+            src="/images/logo.png" 
+            alt="RED PRODUCT Logo" 
+            className="w-8 h-8 object-contain" 
+          />
+          <h1 className="text-lg font-bold tracking-wider uppercase text-white">
+            RED PRODUCT
+          </h1>
         </div>
 
-        {/* Section Principal */}
+        {/* Navigation principale */}
         <div className="mb-6">
           <p className="text-xs uppercase text-gray-400 font-semibold mb-4 tracking-wider">
             Principal
@@ -59,7 +63,7 @@ function Sidebar() {
         </div>
       </div>
 
-      {/* Profil Utilisateur (Bas de la Sidebar) */}
+      {/* Profil Utilisateur (Bas de Sidebar) */}
       <div className="relative z-10 pt-4 border-t border-gray-700/50 flex items-center gap-3">
         <div className="relative">
           <img

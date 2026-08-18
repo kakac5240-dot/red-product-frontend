@@ -48,14 +48,15 @@ function Login() {
       className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-[#323537]"
       style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
     >
-      {/* Contenu principal */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
         
         {/* Logo RED PRODUCT */}
         <div className="flex items-center gap-3 mb-8">
-          <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
+          <img 
+            src="/images/logo.png" 
+            alt="RED PRODUCT Logo" 
+            className="w-10 h-10 object-contain" 
+          />
           <h1 className="text-2xl font-bold text-white tracking-wide uppercase">
             RED PRODUCT
           </h1>
