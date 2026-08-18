@@ -1,24 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
 import HotelList from './pages/HotelList'
-import CreateHotel from './pages/CreateHotel'
+import Login from './pages/Login'
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirection automatique vers la page de connexion */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-
-        {/* Auth */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Application */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/hotels" element={<HotelList />} />
-        <Route path="/hotels/create" element={<CreateHotel />} />
-
-        {/* Redirection par défaut pour les routes non trouvées */}
-        <Route path="*" element={<Navigate to="/hotels" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
   )

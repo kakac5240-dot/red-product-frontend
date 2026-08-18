@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 
 const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
 
-// Mapping direct vers tes images locales dans public/images/
 const FIGMA_IMAGES = {
   'Hôtel Terrou-Bi': '/images/hotel-cart-1.png',
   'King Fahd Palace': '/images/hotel-cart-2.png',
@@ -19,6 +18,7 @@ const FIGMA_IMAGES = {
 function HotelList() {
   const [hotels, setHotels] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/hotels`)
@@ -33,7 +33,11 @@ function HotelList() {
       })
   }, [])
 
-  // Récupère l'image locale correspondante, ou prend une image selon l'index
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    navigate('/login')
+  }
+
   const getHotelImage = (hotel, index) => {
     if (FIGMA_IMAGES[hotel.nom]) {
       return FIGMA_IMAGES[hotel.nom]
@@ -67,6 +71,7 @@ function HotelList() {
               </svg>
             </div>
             
+            {/* Cloche Notifications */}
             <button className="text-gray-500 hover:text-gray-700 relative">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -74,9 +79,21 @@ function HotelList() {
               <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
             </button>
 
+            {/* Avatar Utilisateur */}
             <div className="w-9 h-9 rounded-full bg-gray-300 overflow-hidden border">
               <img src="https://i.pravatar.cc/100" alt="Avatar" className="w-full h-full object-cover" />
             </div>
+
+            {/* Bouton Se Déconnecter Figma */}
+            <button 
+              onClick={handleLogout}
+              title="Se déconnecter"
+              className="text-gray-500 hover:text-red-600 transition-colors ml-1"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </header>
 
@@ -110,7 +127,6 @@ function HotelList() {
                     key={id} 
                     className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col"
                   >
-                    {/* Image PNG locale */}
                     <div className="h-44 w-full bg-gray-200">
                       <img
                         src={getHotelImage(hotel, index)}
@@ -119,7 +135,6 @@ function HotelList() {
                       />
                     </div>
 
-                    {/* Informations de la carte */}
                     <div className="p-4 flex flex-col flex-1">
                       <p className="text-xs text-red-500 font-medium mb-1 truncate">
                         {hotel.adresse || 'Adresse non spécifiée'}
