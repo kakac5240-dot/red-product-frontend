@@ -44,27 +44,10 @@ function Login() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-[#45484B] overflow-hidden">
-      
-      {/* Motifs Géométriques Cercles Figma */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
-        <svg
-          className="absolute w-[1200px] h-[1200px] text-white opacity-10"
-          viewBox="0 0 1000 1000"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Cercles concentriques géométriques identiques à Figma */}
-          <circle cx="500" cy="500" r="100" stroke="currentColor" strokeWidth="30" />
-          <circle cx="500" cy="500" r="180" stroke="currentColor" strokeWidth="25" />
-          <circle cx="500" cy="500" r="260" stroke="currentColor" strokeWidth="20" />
-          <circle cx="500" cy="500" r="340" stroke="currentColor" strokeWidth="15" />
-          <circle cx="500" cy="500" r="420" stroke="currentColor" strokeWidth="10" />
-          <circle cx="500" cy="500" r="500" stroke="currentColor" strokeWidth="8" />
-          <circle cx="500" cy="500" r="580" stroke="currentColor" strokeWidth="5" />
-        </svg>
-      </div>
-
+    <div 
+      className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-[#323537]"
+      style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
+    >
       {/* Contenu principal */}
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
         
@@ -78,7 +61,7 @@ function Login() {
           </h1>
         </div>
 
-        {/* Carte unique de connexion */}
+        {/* Carte du Formulaire */}
         <div className="bg-white rounded-md shadow-2xl p-8 w-full">
           <h2 className="text-gray-700 text-sm font-medium mb-6 text-left">
             Connectez-vous en tant que Admin
@@ -129,7 +112,7 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#45484B] hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
+              className="w-full bg-[#323537] hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
             >
               {loading ? 'Connexion en cours...' : 'Se connecter'}
             </button>
