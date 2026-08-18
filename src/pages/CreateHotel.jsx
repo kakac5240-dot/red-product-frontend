@@ -1,101 +1,38 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
 
-// 8 Modèles d'hôtels du Sénégal
-const HOTEL_MODELS = [
-  {
-    name: 'Hôtel Teranga Dakar',
-    address: 'Place de l\'Indépendance, Dakar',
-    price: '45000',
-    currency: 'FCFA',
-    email: 'contact@terangadakar.sn',
-    phone: '+221 33 889 22 00',
-    imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'King Fahd Palace',
-    address: 'Pointe des Almadies, Dakar',
-    price: '75000',
-    currency: 'FCFA',
-    email: 'reservation@kingfahdpalace.sn',
-    phone: '+221 33 869 69 69',
-    imageUrl: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Pullman Dakar Teranga',
-    address: '10 Rue de Thann, Dakar',
-    price: '85000',
-    currency: 'FCFA',
-    email: 'h0563@accor.com',
-    phone: '+221 33 889 22 22',
-    imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Radisson Blu Hotel Dakar',
-    address: 'Route de la Corniche Ouest, Dakar',
-    price: '95000',
-    currency: 'FCFA',
-    email: 'info.dakar@radissonblu.com',
-    phone: '+221 33 869 33 33',
-    imageUrl: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Lamantin Beach Resort',
-    address: 'Zone Touristique, Saly Portudal',
-    price: '65000',
-    currency: 'FCFA',
-    email: 'resas@lelamantin.com',
-    phone: '+221 33 957 07 77',
-    imageUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Rhino Resort Hotel',
-    address: 'Saly Niakh Niakhal, Saly',
-    price: '55000',
-    currency: 'FCFA',
-    email: 'contact@rhino-resort.com',
-    phone: '+221 33 957 10 10',
-    imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Hôtel Le Djoloff',
-    address: '7 Rue de Nguinth, Fann Résidence, Dakar',
-    price: '38000',
-    currency: 'FCFA',
-    email: 'info@hotel-djoloff.com',
-    phone: '+221 33 825 92 82',
-    imageUrl: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Royam Hotel',
-    address: 'BP 112, Saly Portudal',
-    price: '50000',
-    currency: 'FCFA',
-    email: 'royam@royam-hotel.com',
-    phone: '+221 33 957 11 81',
-    imageUrl: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80',
-  },
-]
+const DEFAULT_HOTEL = {
+  name: 'Hôtel Teranga Dakar',
+  address: "Place de l'Indépendance, Dakar",
+  price: '45000',
+  currency: 'FCFA',
+  email: 'contact@terangadakar.sn',
+  phone: '+221 33 889 22 00',
+  imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+}
 
-function CreateHotel({ isOpen, onClose, onHotelAdded }) {
-  const [formData, setFormData] = useState(HOTEL_MODELS[0])
+function CreateHotel() {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState(DEFAULT_HOTEL)
+  const [imagePreview, setImagePreview] = useState(DEFAULT_HOTEL.imageUrl)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  // Choisit un modèle parmi les 8 à chaque ouverture
-  useEffect(() => {
-    if (isOpen) {
-      const randomIndex = Math.floor(Math.random() * HOTEL_MODELS.length)
-      setFormData(HOTEL_MODELS[randomIndex])
-    }
-  }, [isOpen])
-
-  if (!isOpen) return null
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // Gestion de la sélection d'image depuis le disque local
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      setImagePreview(imageUrl)
+      setFormData((prev) => ({ ...prev, imageUrl: imageUrl }))
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -120,8 +57,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
         throw new Error(data.message || "Erreur lors de la création de l'hôtel")
       }
 
-      if (onHotelAdded) onHotelAdded(data)
-      onClose()
+      navigate('/hotels')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -130,25 +66,21 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden border border-gray-100">
-        {/* Entête */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-bold text-gray-800">
-            Créer un nouvel hôtel
-          </h3>
+    <div className="min-h-screen bg-gray-50 p-8 flex justify-center items-center">
+      <div className="bg-white rounded-xl shadow-md w-full max-w-2xl border border-gray-100 p-8">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+          <h1 className="text-xl font-bold text-gray-800">Créer un nouvel hôtel</h1>
           <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+            onClick={() => navigate('/hotels')}
+            className="text-sm font-medium text-gray-500 hover:text-gray-700"
           >
-            &times;
+            &larr; Retour aux hôtels
           </button>
         </div>
 
-        {/* Formulaire */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 text-red-500 text-xs p-3 rounded border border-red-200">
+            <div className="bg-red-50 text-red-500 text-xs p-3 rounded-lg border border-red-200">
               {error}
             </div>
           )}
@@ -164,7 +96,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -178,7 +110,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
                 required
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -193,7 +125,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
               required
               value={formData.address}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
             />
           </div>
 
@@ -208,7 +140,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -222,7 +154,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -235,7 +167,7 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
               name="currency"
               value={formData.currency}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500 bg-white"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500 bg-white"
             >
               <option value="FCFA">F CFA</option>
               <option value="EUR">Euro (€)</option>
@@ -243,32 +175,52 @@ function CreateHotel({ isOpen, onClose, onHotelAdded }) {
             </select>
           </div>
 
+          {/* Zone d'insertion d'image */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
-              URL de l'image de l'hôtel
+              Ajouter une photo de l'hôtel
             </label>
-            <input
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-500"
-            />
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-red-500 transition-colors bg-gray-50 flex flex-col items-center justify-center cursor-pointer relative">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              {imagePreview ? (
+                <div className="relative w-full h-40">
+                  <img
+                    src={imagePreview}
+                    alt="Aperçu"
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                    Cliquer pour changer
+                  </span>
+                </div>
+              ) : (
+                <div className="py-4">
+                  <p className="text-sm font-medium text-gray-600">
+                    Glissez une image ici ou <span className="text-red-500 underline">parcourez</span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">PNG, JPG ou WEBP jusqu'à 5Mo</p>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Boutons d'action */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+              onClick={() => navigate('/hotels')}
+              className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-[#45484B] hover:bg-gray-800 text-white rounded text-sm font-medium transition-colors disabled:opacity-50"
+              className="px-6 py-2 bg-[#45484B] hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
             >
               {loading ? 'Enregistrement...' : 'Enregistrer'}
             </button>

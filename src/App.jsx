@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login'
 import HotelList from './pages/HotelList'
 import CreateHotel from './pages/CreateHotel'
-import Dashboard from './pages/Dashboard'
-import { hotelsData } from "./Data/hotelsData";
 
 function App() {
   return (
@@ -21,7 +19,6 @@ function App() {
 
         {/* Redirection par défaut pour les routes non trouvées */}
         <Route path="*" element={<Navigate to="/hotels" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   )
