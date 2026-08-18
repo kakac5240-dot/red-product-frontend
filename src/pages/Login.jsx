@@ -32,13 +32,11 @@ function Login() {
         throw new Error(data.message || 'Identifiants incorrects')
       }
 
-      // Stockage du token de connexion
       localStorage.setItem('token', data.token)
       if (keepConnected) {
         localStorage.setItem('keepConnected', 'true')
       }
 
-      // Redirection vers la liste des hôtels
       navigate('/hotels')
     } catch (err) {
       setError(err.message)
@@ -52,7 +50,7 @@ function Login() {
       className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-gray-900"
       style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
     >
-      {/* Logo RED PRODUCT en haut */}
+      {/* Logo RED PRODUCT */}
       <div className="flex items-center gap-3 mb-8">
         <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -62,7 +60,7 @@ function Login() {
         </h1>
       </div>
 
-      {/* Carte du Formulaire */}
+      {/* Formulaire unique */}
       <div className="bg-white rounded-md shadow-2xl p-8 w-full max-w-md">
         <h2 className="text-gray-700 text-sm font-medium mb-6 text-left">
           Connectez-vous en tant que Admin
