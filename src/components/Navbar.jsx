@@ -1,60 +1,67 @@
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
 
-function Navbar({ title }) {
-  const navigate = useNavigate()
+export default function Navbar({ title = "Liste des hôtels" }) {
+  const [time, setTime] = useState(
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  );
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-  }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(
+        new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      );
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <header className="bg-white border-b border-gray-100 px-8 py-3 flex items-center justify-between shadow-sm">
-      {/* Titre de la page */}
+    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
       <h1 className="text-xl font-bold text-gray-800">{title}</h1>
 
-      {/* Partie droite */}
-      <div className="flex items-center space-x-5">
-        
-        {/* Recherche */}
+      <div className="flex items-center gap-4">
+        {/* Barre de recherche */}
         <div className="relative">
           <input
             type="text"
             placeholder="Recherche"
-            className="pl-9 pr-4 py-1.5 text-sm bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:border-gray-400 w-56 text-gray-700"
+            className="pl-9 pr-4 py-1.5 bg-gray-100 border border-transparent rounded-full text-sm focus:outline-none focus:bg-white focus:border-gray-300 w-60 text-gray-700"
           />
-          <span className="absolute left-3 top-2 text-gray-400 text-xs">🔍</span>
-        </div>
-
-        {/* Notification Cloche */}
-        <div className="relative cursor-pointer text-lg p-1">
-          🔔
-          <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-yellow-400 rounded-full border border-white"></span>
-        </div>
-
-        {/* Photo de profil */}
-        <div className="w-9 h-9 rounded-full bg-gray-300 overflow-hidden border border-gray-200">
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-            alt="Profil"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Icône de Déconnexion (Flèche de sortie) */}
-        <button
-          onClick={handleLogout}
-          title="Se déconnecter"
-          className="text-gray-600 hover:text-red-600 p-1 rounded-lg transition-colors flex items-center justify-center"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          <svg
+            className="w-4 h-4 text-gray-400 absolute left-3 top-2.5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
+        </div>
+
+        {/* Horloge */}
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
+          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{time}</span>
+        </div>
+
+        {/* Cloche Notification */}
+        <button className="relative text-gray-500 hover:text-gray-700 ml-2">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">1</span>
         </button>
 
+        {/* Avatar */}
+        <div className="w-8 h-8 rounded-full bg-gray-700 text-white flex items-center justify-center text-xs font-bold">
+          A
+        </div>
       </div>
     </header>
-  )
+  );
 }
-
-export default Navbar

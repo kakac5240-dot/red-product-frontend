@@ -1,147 +1,153 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
+export default function Login() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false,
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [keepConnected, setKeepConnected] = useState(false)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const navigate = useNavigate()
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/login`, {
+      const response = await fetch('http://127.0.0.1:8000/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Identifiants incorrects')
+        throw new Error(data.message || 'Identifiants incorrects');
       }
 
-      localStorage.setItem('token', data.token)
-      if (keepConnected) {
-        localStorage.setItem('keepConnected', 'true')
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
       }
 
-      navigate('/hotels')
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div 
-      className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center bg-no-repeat bg-[#323537]"
-      style={{ backgroundImage: "url('/images/bg-pattern.png')" }}
+      className="min-h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: `url('/images/bg-pattern.png')` }}
     >
-      {/* Contenu principal */}
-      <div className="relative z-10 w-full max-w-md flex flex-col items-center">
-        
-        {/* Logo RED PRODUCT */}
-        <div className="flex items-center gap-3 mb-8">
-          <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <h1 className="text-2xl font-bold text-white tracking-wide uppercase">
-            RED PRODUCT
-          </h1>
-        </div>
+      {/* Logo et Titre SUR LA PAGE (au-dessus du bloc blanc) */}
+      <div className="flex items-center justify-center gap-3 mb-6">
+        <img 
+          src="/images/logo.png" 
+          alt="RED PRODUCT Logo" 
+          className="h-8 object-contain"
+        />
+        <h1 className="font-bold text-2xl tracking-wider text-white">
+          RED PRODUCT
+        </h1>
+      </div>
 
-        {/* Carte du Formulaire */}
-        <div className="bg-white rounded-md shadow-2xl p-8 w-full">
-          <h2 className="text-gray-700 text-sm font-medium mb-6 text-left">
-            Connectez-vous en tant que Admin
-          </h2>
+      {/* Carte blanche du formulaire */}
+      <div className="relative z-10 bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h2 className="text-gray-600 text-sm mb-6 text-center">
+          Connectez-vous en tant que Admin
+        </h2>
 
-          {error && (
-            <div className="bg-red-50 text-red-500 text-sm p-3 rounded mb-4 border border-red-200">
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <input
-                type="email"
-                required
-                placeholder="E-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border-b border-gray-300 py-2 text-sm text-gray-800 focus:outline-none focus:border-gray-600 transition-colors"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">E-mail</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="votre.email@exemple.com"
+              className="w-full border-b border-gray-300 py-2 text-sm focus:border-[#E2211C] focus:outline-none"
+            />
+          </div>
 
-            <div>
-              <input
-                type="password"
-                required
-                placeholder="Mot de passe"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border-b border-gray-300 py-2 text-sm text-gray-800 focus:outline-none focus:border-gray-600 transition-colors"
-              />
-            </div>
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Mot de passe</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="••••••••"
+              className="w-full border-b border-gray-300 py-2 text-sm focus:border-[#E2211C] focus:outline-none"
+            />
+          </div>
 
-            <div className="flex items-center">
+          <div className="flex items-center justify-between pt-2">
+            <label className="flex items-center text-xs text-gray-600 cursor-pointer">
               <input
                 type="checkbox"
-                id="keepConnected"
-                checked={keepConnected}
-                onChange={(e) => setKeepConnected(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-gray-700 focus:ring-0"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleChange}
+                className="mr-2 rounded border-gray-300"
               />
-              <label htmlFor="keepConnected" className="ml-2 text-xs text-gray-600 select-none">
-                Gardez-moi connecté
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#323537] hover:bg-gray-800 text-white font-medium py-3 rounded text-sm transition-colors shadow-sm disabled:opacity-50"
-            >
-              {loading ? 'Connexion en cours...' : 'Se connecter'}
-            </button>
-          </form>
-        </div>
-
-        {/* Liens bas de page */}
-        <div className="mt-6 text-center space-y-3">
-          <div>
-            <Link 
-              to="/forgot-password" 
-              className="text-yellow-500 text-xs hover:underline font-medium"
-            >
-              Mot de passe oublié ?
-            </Link>
+              Garder ma session ouverte
+            </label>
           </div>
-          <div className="text-xs text-gray-300">
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#45484B] hover:bg-gray-800 text-white font-medium py-2.5 rounded-lg text-sm transition mt-4 shadow-md"
+          >
+            {loading ? 'Connexion...' : 'Se connecter'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center space-y-2">
+          <p className="text-xs text-[#E9B949]">
+            <Link to="/forgot-password">Mot de passe oublié ?</Link>
+          </p>
+          <p className="text-xs text-gray-600">
             Vous n'avez pas de compte ?{' '}
-            <Link 
-              to="/register" 
-              className="text-yellow-500 hover:underline font-medium ml-1"
-            >
+            <Link to="/register" className="text-[#E9B949] font-medium">
               S'inscrire
             </Link>
-          </div>
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Login

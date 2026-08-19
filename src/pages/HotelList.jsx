@@ -1,160 +1,186 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
+import React, { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+import AddHotelModal from '../components/AddHotelModal';
 
-const API_BASE_URL = 'https://red-product-backend-ddfy.onrender.com'
+const DEFAULT_HOTELS = [
+  {
+    id: 1,
+    name: 'Hôtel Teranga',
+    location: 'Boulevard Djily Mbaye, Dakar',
+    price: 120000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500'
+  },
+  {
+    id: 2,
+    name: 'King Fahd Palace',
+    location: 'Route des Almadies, Dakar',
+    price: 150000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500'
+  },
+  {
+    id: 3,
+    name: 'Radisson Blu Hotel',
+    location: 'Route de la Corniche Ouest, Dakar',
+    price: 180000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500'
+  },
+  {
+    id: 4,
+    name: 'Pullman Dakar Teranga',
+    location: 'Place de l\'Indépendance, Dakar',
+    price: 140000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500'
+  },
+  {
+    id: 5,
+    name: 'Hôtel Lac Rose',
+    location: 'Niaga, Sénégal',
+    price: 60000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500'
+  },
+  {
+    id: 6,
+    name: 'Hôtel Saly',
+    location: 'Station Balnéaire, Saly',
+    price: 85000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=500'
+  },
+  {
+    id: 7,
+    name: 'Fathala Wildlife Reserve',
+    location: 'Karang, Sénégal',
+    price: 190000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=500'
+  },
+  {
+    id: 8,
+    name: 'Lamantin Beach Resort',
+    location: 'Saly Portudal, Sénégal',
+    price: 165000,
+    currency: 'XOF',
+    image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=500'
+  }
+];
 
-const FIGMA_IMAGES = {
-  'Hôtel Terrou-Bi': '/images/hotel-cart-1.png',
-  'King Fahd Palace': '/images/hotel-cart-2.png',
-  'Radisson Blu Hotel': '/images/hotel-cart-3.png',
-  'Pullman Dakar Teranga': '/images/hotel-cart-4.png',
-  'Hôtel Lac Rose': '/images/hotel-cart-5.png',
-  'Hôtel Saly': '/images/hotel-cart-6.png',
-  'Palm Beach Resort & Spa': '/images/hotel-cart-7.png',
-  'Novotel Dakar': '/images/hotel-cart-8.png'
-}
-
-function HotelList() {
-  const [hotels, setHotels] = useState([])
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+export default function HotelList() {
+  const [hotels, setHotels] = useState(DEFAULT_HOTELS);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/hotels`)
-      .then((res) => res.json())
-      .then((data) => {
-        setHotels(data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.error(err)
-        setLoading(false)
-      })
-  }, [])
+    const fetchHotels = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:8000/api/hotels', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          }
+        });
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-  }
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setHotels(data);
+          }
+        }
+      } catch (err) {
+        console.log("Utilisation des hôtels par défaut", err);
+      }
+    };
 
-  const getHotelImage = (hotel, index) => {
-    if (FIGMA_IMAGES[hotel.nom]) {
-      return FIGMA_IMAGES[hotel.nom]
+    fetchHotels();
+  }, []);
+
+  const handleCreateHotel = (newHotel) => {
+    setHotels((prev) => [newHotel, ...prev]);
+  };
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
+      return imagePath;
     }
-    if (hotel.photo && !hotel.photo.includes('null')) {
-      return hotel.photo.startsWith('http')
-        ? hotel.photo
-        : `${API_BASE_URL}/storage/${hotel.photo}`
-    }
-    return `/images/hotel-cart-${(index % 8) + 1}.png`
-  }
+    return `http://localhost:8000/storage/${imagePath}`;
+  };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif' }}>
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
-        {/* Topbar */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-800">Liste des hôtels</h1>
-          
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Recherche"
-                className="bg-gray-50 text-sm border border-gray-300 rounded-full py-2 px-4 pl-9 focus:outline-none focus:border-gray-400"
-              />
-              <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            
-            {/* Cloche Notifications */}
-            <button className="text-gray-500 hover:text-gray-700 relative">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
-            </button>
-
-            {/* Avatar Utilisateur */}
-            <div className="w-9 h-9 rounded-full bg-gray-300 overflow-hidden border">
-              <img src="https://i.pravatar.cc/100" alt="Avatar" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Bouton Se Déconnecter Figma */}
-            <button 
-              onClick={handleLogout}
-              title="Se déconnecter"
-              className="text-gray-500 hover:text-red-600 transition-colors ml-1"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </button>
-          </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* HEADER */}
+        <header style={{ height: '64px', backgroundColor: '#ffffff', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>Liste des hôtels</h1>
         </header>
 
-        {/* Sous-header */}
-        <div className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-semibold text-gray-800">Hôtels</h2>
-            <span className="text-gray-400 text-lg font-medium">{hotels.length}</span>
+        {/* CONTENU PRINCIPAL */}
+        <main style={{ flex: 1, overflowY: 'auto', padding: '32px', backgroundColor: '#f9fafb' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>Hôtels ({hotels.length})</h2>
+            
+            <button
+              onClick={() => setIsModalOpen(true)}
+              style={{ backgroundColor: '#1f2937', color: '#ffffff', fontWeight: '500', padding: '8px 16px', borderRadius: '8px', fontSize: '14px', border: 'none', cursor: 'pointer' }}
+            >
+              + Créer un nouveau hôtel
+            </button>
           </div>
 
-          <Link
-            to="/hotels/create"
-            className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-md text-sm flex items-center gap-2 shadow-sm"
-          >
-            <span className="text-lg leading-none">+</span> Créer un nouvel hôtel
-          </Link>
-        </div>
-
-        {/* Grille des cartes */}
-        <main className="p-8 flex-1">
-          {loading ? (
-            <div className="text-center py-12 text-gray-500">Chargement des hôtels...</div>
-          ) : hotels.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">Aucun hôtel disponible.</div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {hotels.map((hotel, index) => {
-                const id = hotel._id || hotel.id
-                return (
-                  <div 
-                    key={id} 
-                    className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col"
-                  >
-                    <div className="h-44 w-full bg-gray-200">
-                      <img
-                        src={getHotelImage(hotel, index)}
-                        alt={hotel.nom}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div className="p-4 flex flex-col flex-1">
-                      <p className="text-xs text-red-500 font-medium mb-1 truncate">
-                        {hotel.adresse || 'Adresse non spécifiée'}
-                      </p>
-                      <h3 className="font-bold text-gray-900 text-base mb-1 truncate">
-                        {hotel.nom}
-                      </h3>
-                      <p className="text-xs text-gray-600 mt-auto pt-2">
-                        <span className="font-semibold text-gray-900">{hotel.prix_par_nuit} {hotel.devise || 'F XOF'}</span> par nuit
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
+          {/* GRILLE D'HÔTELS (4 COLONNES) */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: '20px'
+          }}>
+            {hotels.map((hotel, index) => (
+              <div 
+                key={hotel.id || index} 
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  border: '1px solid #e5e7eb',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              >
+                <img 
+                  src={getImageUrl(hotel.image)} 
+                  alt={hotel.name} 
+                  style={{
+                    width: '100%',
+                    height: '150px',
+                    objectFit: 'cover'
+                  }}
+                />
+                <div style={{ padding: '12px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: '600', color: '#ef4444', marginBottom: '2px' }}>
+                    {hotel.location}
+                  </p>
+                  <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#1f2937', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {hotel.name}
+                  </h3>
+                  <p style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>
+                    {hotel.price} {hotel.currency || 'XOF'} par nuit
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </main>
       </div>
-    </div>
-  )
-}
 
-export default HotelList
+      <AddHotelModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onHotelCreated={handleCreateHotel} 
+      />
+    </div>
+  );
+}

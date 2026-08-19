@@ -1,51 +1,112 @@
-import { Link, useLocation } from 'react-router-dom'
+// src/components/Sidebar.jsx
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-function Sidebar() {
-  const location = useLocation()
-  const isActive = (path) => location.pathname === path
+export default function Sidebar() {
+  const location = useLocation();
+
+  // Helper pour vérifier si le lien est actif
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="w-64 bg-[#45484B] text-white flex flex-col justify-between min-h-screen">
+    <aside
+      className="w-64 text-white flex flex-col justify-between flex-shrink-0 h-screen select-none"
+      style={{
+        backgroundImage: `url('/images/bg-pattern.png')`,
+        backgroundColor: '#2c3036', // Couleur de secours en cas d'image introuvable
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <div>
-        {/* Logo RED Product */}
-        <div className="p-6 flex items-center space-x-3 border-b border-gray-600">
-          <span className="font-bold text-lg tracking-wider text-white">RED PRODUCT</span>
+        {/* LOGO & NOM DU PROJET */}
+        <div className="p-6 flex items-center gap-3 border-b border-white/10">
+          <img
+            src="/images/logo.png"
+            alt="RED PRODUCT Logo"
+            className="h-6 w-auto object-contain"
+            onError={(e) => {
+              // Masque l'image si le chemin est incorrect
+              e.target.style.display = 'none';
+            }}
+          />
+          <span className="font-bold text-base tracking-wider text-white">
+            RED PRODUCT
+          </span>
         </div>
 
-        {/* Navigation */}
-        <nav className="mt-6">
-          <p className="px-6 text-xs text-gray-400 uppercase tracking-wider mb-2">Principal</p>
-          <Link
-            to="/dashboard"
-            className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-              isActive('/dashboard') ? 'bg-gray-700 text-white border-l-4 border-red-500' : 'text-gray-300 hover:bg-gray-700'
-            }`}
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/hotels"
-            className={`flex items-center px-6 py-3 text-sm font-medium transition-colors ${
-              isActive('/hotels') ? 'bg-gray-700 text-white border-l-4 border-red-500' : 'text-gray-300 hover:bg-gray-700'
-            }`}
-          >
-            Liste des hôtels
-          </Link>
+        {/* NAVIGATION PRINCIPALE */}
+        <nav className="mt-6 px-4">
+          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-3 px-3">
+            Principal
+          </p>
+          <div className="space-y-1">
+            <Link
+              to="/dashboard"
+              className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 ${
+                isActive('/dashboard')
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-300 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+              Dashboard
+            </Link>
+
+            <Link
+              to="/hotels"
+              className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 ${
+                isActive('/hotels') || isActive('/create-hotel')
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-300 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4"
+                />
+              </svg>
+              Liste des hôtels
+            </Link>
+          </div>
         </nav>
       </div>
 
-      {/* Profil Bas de Sidebar */}
-      <div className="p-4 border-t border-gray-600 flex items-center space-x-3">
-        <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center font-bold text-white text-sm">
-          A
+      {/* PROFIL UTILISATEUR CONNECTÉ */}
+      <div className="p-4 border-t border-white/10 flex items-center gap-3">
+        <div className="relative">
+          <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center font-bold text-gray-800 text-xs overflow-hidden">
+            SA
+          </div>
+          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-gray-900 rounded-full"></span>
         </div>
         <div>
-          <p className="text-sm font-semibold">Administrateur</p>
-          <p className="text-xs text-green-400">● En ligne</p>
+          <p className="text-xs font-medium text-white leading-tight">
+            Signor Admin
+          </p>
+          <p className="text-[10px] text-green-400">en ligne</p>
         </div>
       </div>
-    </div>
-  )
+    </aside>
+  );
 }
-
-export default Sidebar
