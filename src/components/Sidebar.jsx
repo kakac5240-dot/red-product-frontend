@@ -1,12 +1,20 @@
 // src/components/Sidebar.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Helper pour vérifier si le lien est actif
   const isActive = (path) => location.pathname === path;
+
+  // Fonction de déconnexion
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
 
   return (
     <aside
@@ -92,20 +100,33 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* PROFIL UTILISATEUR CONNECTÉ */}
-      <div className="p-4 border-t border-white/10 flex items-center gap-3">
-        <div className="relative">
-          <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center font-bold text-gray-800 text-xs overflow-hidden">
-            SA
+      {/* PROFIL UTILISATEUR ET BOUTON DE DÉCONNEXION */}
+      <div className="p-4 border-t border-white/10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="w-9 h-9 rounded-full bg-gray-400 flex items-center justify-center font-bold text-gray-800 text-xs overflow-hidden">
+              SA
+            </div>
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-gray-900 rounded-full"></span>
           </div>
-          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-gray-900 rounded-full"></span>
+          <div>
+            <p className="text-xs font-medium text-white leading-tight">
+              Signor Admin
+            </p>
+            <p className="text-[10px] text-green-400">en ligne</p>
+          </div>
         </div>
-        <div>
-          <p className="text-xs font-medium text-white leading-tight">
-            Signor Admin
-          </p>
-          <p className="text-[10px] text-green-400">en ligne</p>
-        </div>
+
+        {/* Bouton Déconnexion */}
+        <button
+          onClick={handleLogout}
+          title="Se déconnecter"
+          className="text-gray-400 hover:text-red-400 transition-colors p-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
       </div>
     </aside>
   );
