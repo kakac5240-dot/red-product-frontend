@@ -30,7 +30,7 @@ const DEFAULT_HOTELS = [
   {
     id: 4,
     name: 'Pullman Dakar Teranga',
-    location: 'Place de l\'Indépendance, Dakar',
+    location: "Place de l'Indépendance, Dakar",
     price: 140000,
     currency: 'XOF',
     image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500'
@@ -71,6 +71,7 @@ const DEFAULT_HOTELS = [
 
 export default function HotelList() {
   const [hotels, setHotels] = useState(DEFAULT_HOTELS);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -102,6 +103,11 @@ export default function HotelList() {
     setHotels((prev) => [newHotel, ...prev]);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
+
   const getImageUrl = (imagePath) => {
     if (!imagePath) return 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500';
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
@@ -110,20 +116,91 @@ export default function HotelList() {
     return `http://localhost:8000/storage/${imagePath}`;
   };
 
+  const filteredHotels = hotels.filter((hotel) =>
+    hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    hotel.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif' }}>
       <Sidebar />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        {/* HEADER */}
-        <header style={{ height: '64px', backgroundColor: '#ffffff', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px' }}>
-          <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>Liste des hôtels</h1>
+        
+        {/* HEADER SUPERIEUR */}
+        <header style={{ 
+          height: '64px', 
+          backgroundColor: '#ffffff', 
+          borderBottom: '1px solid #e5e7eb', 
+          display: 'flex', 
+          alignItems: 'center', 
+          padding: '0 32px',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
+          {/* TITRE À GAUCHE */}
+          <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: 0 }}>
+            Liste des hôtels
+          </h1>
+
+          {/* BLOC COMPLET POUSSÉ TOUT À DROITE VIA marginLeft: auto */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto' }}>
+            
+            {/* RECHERCHE */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <svg 
+                style={{ position: 'absolute', left: '12px', width: '15px', height: '15px', color: '#9ca3af' }} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input 
+                type="text" 
+                placeholder="Recherche" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  padding: '6px 12px 6px 34px',
+                  borderRadius: '20px',
+                  border: '1px solid #e5e7eb',
+                  fontSize: '13px',
+                  outline: 'none',
+                  width: '160px',
+                  backgroundColor: '#ffffff',
+                  color: '#374151'
+                }}
+              />
+            </div>
+
+            {/* NOTIFICATION */}
+            <div style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}>
+              <svg style={{ width: '20px', height: '20px', color: '#4b5563' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <span style={{ position: 'absolute', top: '2px', right: '2px', width: '7px', height: '7px', backgroundColor: '#f59e0b', borderRadius: '50%' }}></span>
+            </div>
+
+            {/* AVATAR + STATUT EN LIGNE (Clic pour déconnexion) */}
+            <div 
+              onClick={handleLogout} 
+              title="Cliquer pour se déconnecter"
+              style={{ position: 'relative', cursor: 'pointer' }}
+            >
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#cbd5e1', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '12px' }}>
+                SA
+              </div>
+              <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%', border: '1.5px solid #ffffff' }}></span>
+            </div>
+
+          </div>
         </header>
 
         {/* CONTENU PRINCIPAL */}
         <main style={{ flex: 1, overflowY: 'auto', padding: '32px', backgroundColor: '#f9fafb' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>Hôtels ({hotels.length})</h2>
+            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937', margin: 0 }}>Hôtels ({filteredHotels.length})</h2>
             
             <button
               onClick={() => setIsModalOpen(true)}
@@ -139,7 +216,7 @@ export default function HotelList() {
             gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
             gap: '20px'
           }}>
-            {hotels.map((hotel, index) => (
+            {filteredHotels.map((hotel, index) => (
               <div 
                 key={hotel.id || index} 
                 style={{
@@ -153,6 +230,10 @@ export default function HotelList() {
                 <img 
                   src={getImageUrl(hotel.image)} 
                   alt={hotel.name} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500';
+                  }}
                   style={{
                     width: '100%',
                     height: '150px',
