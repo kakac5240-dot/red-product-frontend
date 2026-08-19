@@ -78,7 +78,7 @@ export default function HotelList() {
     const fetchHotels = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8000/api/hotels', {
+        const response = await fetch('https://red-product-backend-ddfy.onrender.com/api/hotels', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
@@ -113,7 +113,7 @@ export default function HotelList() {
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
       return imagePath;
     }
-    return `http://localhost:8000/storage/${imagePath}`;
+    return `https://red-product-backend-ddfy.onrender.com/storage/${imagePath}`;
   };
 
   const filteredHotels = hotels.filter((hotel) =>
@@ -154,7 +154,7 @@ export default function HotelList() {
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input 
                 type="text" 
