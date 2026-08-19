@@ -88,7 +88,15 @@ export default function HotelList() {
         if (response.ok) {
           const data = await response.json();
           if (Array.isArray(data) && data.length > 0) {
-            setHotels(data);
+            const formatted = data.map((hotel) => ({
+              id: hotel.id,
+              name: hotel.nom,
+              location: hotel.adresse,
+              price: hotel.prix_par_nuit,
+              currency: hotel.devise,
+              image: hotel.photo,
+            }));
+            setHotels(formatted);
           }
         }
       } catch (err) {
@@ -117,8 +125,8 @@ export default function HotelList() {
   };
 
   const filteredHotels = hotels.filter((hotel) =>
-    hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    hotel.location.toLowerCase().includes(searchTerm.toLowerCase())
+    (hotel.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (hotel.location || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -127,7 +135,6 @@ export default function HotelList() {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         
-        {/* HEADER SUPERIEUR */}
         <header style={{ 
           height: '64px', 
           backgroundColor: '#ffffff', 
@@ -138,15 +145,12 @@ export default function HotelList() {
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          {/* TITRE À GAUCHE */}
           <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: 0 }}>
             Liste des hôtels
           </h1>
 
-          {/* GROUPE DE DROITE */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '22px', marginLeft: 'auto' }}>
             
-            {/* RECHERCHE */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <svg 
                 style={{ position: 'absolute', left: '12px', width: '15px', height: '15px', color: '#9ca3af' }} 
@@ -174,7 +178,6 @@ export default function HotelList() {
               />
             </div>
 
-            {/* NOTIFICATION : CLOCHE PLEINE NOIRE + BADGE JAUNE CARRÉ ARRONDI AVEC '3' EN BLANC */}
             <div title="Notifications" style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
               <svg 
                 style={{ width: '22px', height: '22px', fill: '#000000' }} 
@@ -203,7 +206,6 @@ export default function HotelList() {
               </span>
             </div>
 
-            {/* AVATAR DE PROFIL AVEC POINT VERT */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <div style={{ 
                 width: '36px', 
@@ -228,7 +230,6 @@ export default function HotelList() {
               }}></span>
             </div>
 
-            {/* DÉCONNEXION FLECHE NOIRE */}
             <button 
               onClick={handleLogout}
               title="Se déconnecter"
@@ -250,7 +251,6 @@ export default function HotelList() {
           </div>
         </header>
 
-        {/* CONTENU PRINCIPAL */}
         <main style={{ flex: 1, overflowY: 'auto', padding: '32px', backgroundColor: '#f9fafb' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937', margin: 0 }}>Hôtels ({filteredHotels.length})</h2>
@@ -263,7 +263,6 @@ export default function HotelList() {
             </button>
           </div>
 
-          {/* GRILLE D'HÔTELS */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
