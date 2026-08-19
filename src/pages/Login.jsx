@@ -40,7 +40,16 @@ export default function Login() {
         }),
       });
 
-      const data = await response.json();
+      // Récupération du texte brut pour éviter le plantage si le serveur renvoie du HTML/vide
+      const responseText = await response.text();
+      let data = {};
+      
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch (err) {
+        console.error("Réponse non JSON du serveur :", responseText);
+        throw new Error("Erreur serveur : Le backend Laravel a rencontré un problème (Erreur 500 ou base de données).");
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Identifiants incorrects');
