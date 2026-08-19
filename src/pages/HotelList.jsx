@@ -127,7 +127,7 @@ export default function HotelList() {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         
-        {/* HEADER SUPERIEUR */}
+        {/* HEADER SUPERIEUR AVEC DÉCONNEXION */}
         <header style={{ 
           height: '64px', 
           backgroundColor: '#ffffff', 
@@ -143,10 +143,10 @@ export default function HotelList() {
             Liste des hôtels
           </h1>
 
-          {/* BLOC COMPLET POUSSÉ TOUT À DROITE VIA marginLeft: auto */}
+          {/* GROUPE DE DROITE POUSSÉ PAR marginLeft: auto */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginLeft: 'auto' }}>
             
-            {/* RECHERCHE */}
+            {/* BARRE DE RECHERCHE */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <svg 
                 style={{ position: 'absolute', left: '12px', width: '15px', height: '15px', color: '#9ca3af' }} 
@@ -174,7 +174,7 @@ export default function HotelList() {
               />
             </div>
 
-            {/* NOTIFICATION */}
+            {/* CLOCHE DE NOTIFICATION */}
             <div style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}>
               <svg style={{ width: '20px', height: '20px', color: '#4b5563' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -182,17 +182,32 @@ export default function HotelList() {
               <span style={{ position: 'absolute', top: '2px', right: '2px', width: '7px', height: '7px', backgroundColor: '#f59e0b', borderRadius: '50%' }}></span>
             </div>
 
-            {/* AVATAR + STATUT EN LIGNE (Clic pour déconnexion) */}
-            <div 
-              onClick={handleLogout} 
-              title="Cliquer pour se déconnecter"
-              style={{ position: 'relative', cursor: 'pointer' }}
-            >
+            {/* AVATAR DE PROFIL AVEC STATUT EN LIGNE */}
+            <div style={{ position: 'relative' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#cbd5e1', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '12px' }}>
                 SA
               </div>
               <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%', border: '1.5px solid #ffffff' }}></span>
             </div>
+
+            {/* BOUTON DÉCONNEXION FIGMA */}
+            <button 
+              onClick={handleLogout}
+              title="Se déconnecter"
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer', 
+                color: '#6b7280', 
+                display: 'flex', 
+                alignItems: 'center', 
+                padding: '4px' 
+              }}
+            >
+              <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
 
           </div>
         </header>
@@ -210,7 +225,7 @@ export default function HotelList() {
             </button>
           </div>
 
-          {/* GRILLE D'HÔTELS (4 COLONNES) */}
+          {/* GRILLE D'HÔTELS */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
