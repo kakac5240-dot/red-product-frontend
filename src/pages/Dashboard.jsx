@@ -1,170 +1,171 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 
 export default function Dashboard() {
-  // Gestion de l'horloge en temps réel
-  const [time, setTime] = useState(
-    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  );
+  const [hotels] = useState([
+    { id: 1, name: 'Hôtel Teranga' },
+    { id: 2, name: 'King Fahd Palace' },
+    { id: 3, name: 'Radisson Blu Hotel' },
+    { id: 4, name: 'Pullman Dakar Teranga' },
+    { id: 5, name: 'Hôtel Lac Rose' },
+    { id: 6, name: 'Hôtel Saly' },
+    { id: 7, name: 'Fathala Wildlife Reserve' },
+    { id: 8, name: 'Lamantin Beach Resort' }
+  ]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(
-        new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      );
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
 
-  const stats = [
-    {
-      id: 1,
-      count: '125',
-      label: 'Formulaires',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-purple-500',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
-    },
-    {
-      id: 2,
-      count: '40',
-      label: 'Messages',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-teal-400',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-      ),
-    },
-    {
-      id: 3,
-      count: '600',
-      label: 'Événements',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-yellow-400',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-    },
-    {
-      id: 4,
-      count: '08',
-      label: 'Hôtels',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-red-500',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m0 0h4" />
-        </svg>
-      ),
-    },
-    {
-      id: 5,
-      count: '40',
-      label: 'Entités',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-purple-600',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-      ),
-    },
-    {
-      id: 6,
-      count: '02',
-      label: 'Équipes',
-      sublabel: 'Je ne sais pas quoi mettre',
-      bgColor: 'bg-blue-500',
-      icon: (
-        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-    },
-  ];
+  const hotelCount = hotels.length < 10 ? `0${hotels.length}` : hotels.length;
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans">
+    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif' }}>
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* HEADER AVEC BARRE DE RECHERCHE DEVANT L'HORLOGE */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
-          <h1 className="text-xl font-bold text-gray-800">Dashboard</h1>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        
+        {/* HEADER */}
+        <header style={{ 
+          height: '64px', backgroundColor: '#ffffff', borderBottom: '1px solid #e5e7eb', 
+          display: 'flex', alignItems: 'center', padding: '0 32px', width: '100%', boxSizing: 'border-box'
+        }}>
+          <h1 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: 0 }}>Dashboard</h1>
 
-          <div className="flex items-center gap-6">
-            {/* Barre de recherche */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Recherche"
-                className="pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 w-64 text-gray-700"
-              />
-              <svg className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '22px', marginLeft: 'auto' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <svg style={{ position: 'absolute', left: '12px', width: '15px', height: '15px', color: '#9ca3af' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
+              <input type="text" placeholder="Recherche" style={{
+                padding: '7px 12px 7px 34px', borderRadius: '20px', border: '1px solid #e5e7eb',
+                fontSize: '13px', outline: 'none', width: '180px', backgroundColor: '#ffffff', color: '#374151'
+              }}/>
             </div>
 
-            {/* Horloge */}
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
-              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div title="Notifications" style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+              <svg style={{ width: '22px', height: '22px', fill: '#000000' }} viewBox="0 0 24 24">
+                <path d="M12 2a6 6 0 0 0-6 6v3.586l-.707.707A1 1 0 0 0 5 14h14a1 1 0 0 0 .707-1.707L19 11.586V8a6 6 0 0 0-6-6zm0 19a3 3 0 0 0 2.816-2H9.184A3 3 0 0 0 12 21z" />
               </svg>
-              <span>{time}</span>
+              <span style={{ 
+                position: 'absolute', top: '-7px', right: '-8px', backgroundColor: '#f59e0b', 
+                color: '#ffffff', fontSize: '11px', fontWeight: '700', borderRadius: '4px', 
+                width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' 
+              }}>3</span>
             </div>
 
-            {/* Notifications & Avatar */}
-            <div className="flex items-center gap-4 border-l border-gray-200 pl-4">
-              <button className="relative text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">1</span>
-              </button>
-
-              <div className="w-8 h-8 rounded-full bg-gray-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
-                A
-              </div>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <div style={{ 
+                width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#fcd34d', 
+                backgroundImage: 'url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100")',
+                backgroundSize: 'cover', backgroundPosition: 'center', border: '1px solid #e5e7eb'
+              }}></div>
+              <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '9px', height: '9px', backgroundColor: '#22c55e', borderRadius: '50%', border: '1.5px solid #ffffff' }}></span>
             </div>
+
+            <button onClick={handleLogout} title="Se déconnecter" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#000000', display: 'flex', alignItems: 'center', padding: '2px' }}>
+              <svg style={{ width: '22px', height: '22px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         </header>
 
-        {/* CONTENU */}
-        <main className="flex-1 overflow-y-auto p-8 bg-gray-50">
-          <div className="bg-white p-6 rounded-xl shadow-sm mb-8 border border-gray-100">
-            <h2 className="text-lg font-bold text-gray-800">Bienvenue sur RED Product</h2>
-            <p className="text-gray-500 text-xs mt-1">
-              Lorem ipsum dolor sit amet consectetur
-            </p>
+        {/* CONTENU PRINCIPAL */}
+        <main style={{ flex: 1, overflowY: 'auto', padding: '32px', backgroundColor: '#f9fafb', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '24px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#1f2937', margin: '0 0 8px 0' }}>Bienvenue sur RED Product</h2>
+            <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>Lorem ipsum dolor sit amet consectetur</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stats.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4"
-              >
-                <div className={`w-12 h-12 rounded-full ${item.bgColor} flex items-center justify-center flex-shrink-0 shadow-inner`}>
-                  {item.icon}
-                </div>
-                <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-extrabold text-gray-800">{item.count}</span>
-                    <span className="text-sm font-semibold text-gray-600">{item.label}</span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-0.5">{item.sublabel}</p>
-                </div>
+          {/* GRILLE 3 COLONNES */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
+            
+            {/* 1. Formulaires */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#9333ea', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
               </div>
-            ))}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>125</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Formulaires</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Je ne sais pas quoi mettre</p>
+              </div>
+            </div>
+
+            {/* 2. Messages */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#14b8a6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>40</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Messages</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Je ne sais pas quoi mettre</p>
+              </div>
+            </div>
+
+            {/* 3. Utilisateurs */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#eab308', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>600</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Utilisateurs</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Je ne sais pas quoi mettre</p>
+              </div>
+            </div>
+
+            {/* 4. E-mails */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>25</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>E-mails</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Je ne sais pas quoi mettre</p>
+              </div>
+            </div>
+
+            {/* Hôtels */}
+<div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+  <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+    <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+  </div>
+  <div>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+      <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>08</span>
+      <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Hôtels</span>
+    </div>
+    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Nombre total d'hôtels enregistrés</p>
+  </div>
+</div>
+
+            {/* 6. Entités */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>02</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Entités</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Je ne sais pas quoi mettre</p>
+              </div>
+            </div>
+
           </div>
         </main>
       </div>

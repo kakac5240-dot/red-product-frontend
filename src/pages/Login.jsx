@@ -25,7 +25,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login', {
+      // Définition de l'URL dynamique (Render en ligne ou Localhost sur ton PC)
+      const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

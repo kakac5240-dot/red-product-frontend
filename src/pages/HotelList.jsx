@@ -174,23 +174,26 @@ export default function HotelList() {
               />
             </div>
 
-            {/* NOTIFICATION : CLOCHE NOIRE + BADGE JAUNE CARRÉ ARRONDI AVEC '3' EN BLANC */}
+            {/* NOTIFICATION : CLOCHE PLEINE NOIRE + BADGE JAUNE CARRÉ ARRONDI AVEC '3' EN BLANC */}
             <div title="Notifications" style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-              <svg style={{ width: '22px', height: '22px', color: '#000000' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              <svg 
+                style={{ width: '22px', height: '22px', fill: '#000000' }} 
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2a6 6 0 0 0-6 6v3.586l-.707.707A1 1 0 0 0 5 14h14a1 1 0 0 0 .707-1.707L19 11.586V8a6 6 0 0 0-6-6zm0 19a3 3 0 0 0 2.816-2H9.184A3 3 0 0 0 12 21z" />
               </svg>
               
               <span style={{ 
                 position: 'absolute', 
                 top: '-7px', 
                 right: '-8px', 
-                backgroundColor: '#eab308', 
+                backgroundColor: '#f59e0b', 
                 color: '#ffffff', 
                 fontSize: '11px', 
                 fontWeight: '700', 
-                borderRadius: '5px', 
-                width: '17px',
-                height: '17px',
+                borderRadius: '4px', 
+                width: '16px',
+                height: '16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -225,7 +228,7 @@ export default function HotelList() {
               }}></span>
             </div>
 
-            {/* BOUTON DÉCONNEXION NOIR */}
+            {/* DÉCONNEXION FLECHE NOIRE */}
             <button 
               onClick={handleLogout}
               title="Se déconnecter"
