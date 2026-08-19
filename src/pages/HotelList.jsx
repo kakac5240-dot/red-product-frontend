@@ -143,8 +143,8 @@ export default function HotelList() {
             Liste des hôtels
           </h1>
 
-          {/* GROUPE DE DROITE POUSSÉ PAR marginLeft: auto */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '18px', marginLeft: 'auto' }}>
+          {/* GROUPE À DROITE ENCADRÉ AVEC BONS ESPACEMENTS ET RELIEF */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginLeft: 'auto' }}>
             
             {/* BARRE DE RECHERCHE */}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -162,9 +162,9 @@ export default function HotelList() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-                  padding: '6px 12px 6px 34px',
+                  padding: '7px 12px 7px 34px',
                   borderRadius: '20px',
-                  border: '1px solid #e5e7eb',
+                  border: '1px solid #d1d5db',
                   fontSize: '13px',
                   outline: 'none',
                   width: '160px',
@@ -174,37 +174,85 @@ export default function HotelList() {
               />
             </div>
 
-            {/* CLOCHE DE NOTIFICATION (NOIR) */}
-            <div style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}>
-              <svg style={{ width: '20px', height: '20px', color: '#000000' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* BOUTON NOTIFICATION AVEC FOND CLAIR */}
+            <div 
+              title="Notifications"
+              style={{ 
+                position: 'relative', 
+                cursor: 'pointer', 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '50%', 
+                backgroundColor: '#f3f4f6', 
+                border: '1px solid #e5e7eb',
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center' 
+              }}
+            >
+              <svg style={{ width: '18px', height: '18px', color: '#1f2937' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
-              <span style={{ position: 'absolute', top: '0px', right: '0px', width: '7px', height: '7px', backgroundColor: '#f59e0b', borderRadius: '50%' }}></span>
+              <span style={{ 
+                position: 'absolute', 
+                top: '6px', 
+                right: '7px', 
+                width: '8px', 
+                height: '8px', 
+                backgroundColor: '#f59e0b', 
+                borderRadius: '50%',
+                border: '1.5px solid #ffffff'
+              }}></span>
             </div>
 
-            {/* AVATAR DE PROFIL AVEC STATUT EN LIGNE */}
+            {/* AVATAR PROFIL */}
             <div style={{ position: 'relative' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#cbd5e1', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', fontSize: '12px' }}>
+              <div style={{ 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '50%', 
+                backgroundColor: '#cbd5e1', 
+                color: '#1e293b', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontWeight: '700', 
+                fontSize: '13px',
+                border: '1px solid #cbd5e1'
+              }}>
                 SA
               </div>
-              <span style={{ position: 'absolute', bottom: '0px', right: '0px', width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%', border: '1.5px solid #ffffff' }}></span>
+              <span style={{ 
+                position: 'absolute', 
+                bottom: '1px', 
+                right: '1px', 
+                width: '9px', 
+                height: '9px', 
+                backgroundColor: '#22c55e', 
+                borderRadius: '50%', 
+                border: '2px solid #ffffff' 
+              }}></span>
             </div>
 
-            {/* BOUTON DÉCONNEXION (NOIR) */}
+            {/* BOUTON DÉCONNEXION DUMP ENCADRÉ */}
             <button 
               onClick={handleLogout}
               title="Se déconnecter"
               style={{ 
-                background: 'none', 
-                border: 'none', 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '50%', 
+                backgroundColor: '#f3f4f6', 
+                border: '1px solid #e5e7eb',
                 cursor: 'pointer', 
-                color: '#000000', 
+                color: '#dc2626', 
                 display: 'flex', 
                 alignItems: 'center', 
-                padding: '2px' 
+                justifyContent: 'center',
+                padding: 0
               }}
             >
-              <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
             </button>
