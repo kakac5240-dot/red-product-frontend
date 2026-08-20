@@ -106,7 +106,7 @@ export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Emplacement</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Adresse</label>
             <input type="text" required value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full px-3 py-2 border rounded-lg text-sm" />
           </div>
 
