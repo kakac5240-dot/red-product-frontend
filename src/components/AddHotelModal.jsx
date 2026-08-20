@@ -4,11 +4,15 @@ export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
   const [formData, setFormData] = useState({
     name: '',
     location: '',
+    email: '',
+    phone: '',
     price: '',
     currency: 'XOF',
     imageFile: null,
     imagePreview: null,
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!isOpen) return null;
 
@@ -23,26 +27,77 @@ export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Construction du FormData pour l'envoi API
+  const uploadToCloudinary = async (file) => {
     const data = new FormData();
-    data.append('name', formData.name);
-    data.append('location', formData.location);
-    data.append('price', formData.price);
-    data.append('currency', formData.currency);
-    if (formData.imageFile) data.append('image', formData.imageFile);
+    data.append('file', file);
+    data.append('upload_preset', 'hotel_uploads');
 
-    onHotelCreated(data);
-    onClose();
+    const response = await fetch(
+      'https://api.cloudinary.com/v1_1/f6ys6orz/image/upload',
+      { method: 'POST', body: data }
+    );
+    const result = await response.json();
+    return result.secure_url;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      let photoUrl = null;
+      if (formData.imageFile) {
+        photoUrl = await uploadToCloudinary(formData.imageFile);
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://red-product-backend-ddfy.onrender.com/api/hotels', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nom: formData.name,
+          adresse: formData.location,
+          email: formData.email,
+          telephone: formData.phone,
+          prix_par_nuit: formData.price,
+          devise: formData.currency,
+          photo: photoUrl,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la création');
+      }
+
+      const newHotel = await response.json();
+      onHotelCreated({
+        id: newHotel.id,
+        name: newHotel.nom,
+        location: newHotel.adresse,
+        price: newHotel.prix_par_nuit,
+        currency: newHotel.devise,
+        image: newHotel.photo,
+      });
+      onClose();
+    } catch (err) {
+      setError('Une erreur est survenue. Vérifiez les champs.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl relative">
+      <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
         <h2 className="text-lg font-bold text-gray-800 mb-4">Créer un nouveau hôtel</h2>
+
+        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -53,6 +108,17 @@ export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">Emplacement</label>
             <input type="text" required value={formData.location} onChange={(e) => setFormData({...formData, location: e.target.value})} className="w-full px-3 py-2 border rounded-lg text-sm" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">E-mail</label>
+              <input type="email" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-3 py-2 border rounded-lg text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Téléphone</label>
+              <input type="text" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-3 py-2 border rounded-lg text-sm" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -84,7 +150,9 @@ export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
 
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 border rounded-lg text-sm text-gray-600">Annuler</button>
-            <button type="submit" className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-900">Enregistrer</button>
+            <button type="submit" disabled={loading} className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-900 disabled:opacity-50">
+              {loading ? 'Envoi...' : 'Enregistrer'}
+            </button>
           </div>
         </form>
       </div>
