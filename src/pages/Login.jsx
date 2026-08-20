@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 function Login() {
   const navigate = useNavigate()
@@ -102,12 +102,12 @@ function Login() {
           </form>
 
           <p className="text-center text-yellow-600 text-sm mt-4">
-            Mot de passe oublié?
+            <Link to="/forgot-password">Mot de passe oublié?</Link>
           </p>
 
           <p className="text-center text-sm text-gray-600 mt-2">
             Vous n'avez pas de compte?{' '}
-            <span className="text-yellow-600 font-medium">S'inscrire</span>
+            <Link to="/register" className="text-yellow-600 font-medium">S'inscrire</Link>
           </p>
         </div>
       </div>

@@ -1,28 +1,24 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login'; // Assure-toi que le chemin d'accès vers Login est correct
-import Dashboard from './pages/Dashboard';
-import AddHotel from './pages/AddHotel';
-import HotelList from './pages/HotelList';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import Dashboard from './pages/Dashboard'
+import HotelList from './pages/HotelList'
+import CreateHotel from './pages/CreateHotel'
 
-export default function App() {
+function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        {/* Route pour la page de connexion */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Routes protégées de ton application */}
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/hotels/add" element={<AddHotel />} />
         <Route path="/hotels" element={<HotelList />} />
-        
-        {/* Redirection par défaut : si on arrive sur l'accueil (/), on va vers /login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        
-        {/* Route par défaut pour les URL introuvables */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/hotels/create" element={<CreateHotel />} />
       </Routes>
-    </Router>
-  );
+    </BrowserRouter>
+  )
 }
+
+export default App

@@ -1,80 +1,107 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 
-export default function ForgotPassword() {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+function ForgotPassword() {
+  const navigate = useNavigate()
+  const [form, setForm] = useState({ email: '', password: '' })
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
 
-    // Simulation de l'envoi d'e-mail (à relier à votre API Laravel)
-    setTimeout(() => {
-      setMessage({
-        type: 'success',
-        text: 'Un lien de réinitialisation a été envoyé à votre adresse e-mail.',
-      });
-      setLoading(false);
-    }, 1000);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+
+    try {
+      const response = await fetch('https://red-product-backend-ddfy.onrender.com/api/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(form),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur')
+      }
+
+      setSuccess(true)
+      setTimeout(() => navigate('/'), 2000)
+    } catch (err) {
+      setError('E-mail introuvable ou erreur.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 font-sans">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Mot de passe oublié ?</h2>
-          <p className="text-xs text-gray-500 mt-2">
-            Entrez votre adresse e-mail ci-dessous et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-          </p>
+    <div
+      className="min-h-screen flex items-center justify-center bg-gray-900"
+      style={{
+        backgroundImage: 'url(/images/bg-pattern.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className="w-full max-w-md">
+        <div className="flex items-center gap-2 mb-6 justify-center">
+          <img src="/images/logo.png" alt="RED PRODUCT" className="h-8" />
+          <h1 className="text-xl font-bold text-white">RED PRODUCT</h1>
         </div>
 
-        {message && (
-          <div
-            className={`p-3 text-xs rounded-lg mb-4 text-center ${
-              message.type === 'success'
-                ? 'bg-green-50 text-green-700 border border-green-200'
-                : 'bg-red-50 text-red-700 border border-red-200'
-            }`}
-          >
-            {message.text}
-          </div>
-        )}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <p className="text-gray-600 mb-6">
+            Réinitialiser votre mot de passe
+          </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Votre e-mail
-            </label>
-            <input
-              type="email"
-              required
-              placeholder="exemple@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-800 transition"
-            />
-          </div>
+          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+          {success && <p className="text-green-600 text-sm mb-4">Mot de passe mis à jour ! Redirection...</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gray-800 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-900 transition disabled:opacity-50"
-          >
-            {loading ? 'Envoi en cours...' : 'Envoyer le lien'}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">E-mail</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+              />
+            </div>
 
-        <div className="mt-6 text-center">
-          <Link
-            to="/login"
-            className="text-xs font-semibold text-gray-600 hover:text-gray-800 transition"
-          >
-            ← Retour à la page de connexion
-          </Link>
+            <div>
+              <label className="block text-sm text-gray-700 mb-1">Nouveau mot de passe</label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gray-800 text-white rounded py-2 font-medium hover:bg-gray-700 disabled:opacity-50"
+            >
+              {loading ? 'Envoi...' : 'Réinitialiser'}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-gray-600 mt-4">
+            <Link to="/" className="text-yellow-600 font-medium">Retour à la connexion</Link>
+          </p>
         </div>
       </div>
     </div>
-  );
+  )
 }
+
+export default ForgotPassword
