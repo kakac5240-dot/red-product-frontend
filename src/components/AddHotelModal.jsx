@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    email: '',
-    phone: '',
-    price: '',
+    name: 'Hôtel Exemple',
+    location: 'Dakar, Sénégal',
+    email: 'contact@hotel.com',
+    phone: '+221 77 000 00 00',
+    price: '25000',
     currency: 'XOF',
     imageFile: null,
     imagePreview: null,
