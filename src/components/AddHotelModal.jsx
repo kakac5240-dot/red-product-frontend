@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 
 export default function CreateHotelModal({ isOpen, onClose, onHotelCreated }) {
   const [formData, setFormData] = useState({
-    name: 'Hôtel Exemple',
-    location: 'Dakar, Sénégal',
-    email: 'contact@hotel.com',
-    phone: '+221 77 000 00 00',
-    price: '25000',
-    currency: 'XOF',
-    imageFile: null,
-    imagePreview: null,
+  name: 'Hôtel Terrou-Bi',
+  location: 'Boulevard Djily Mbaye, Dakar',
+  email: 'contact@terroubi.com',
+  phone: '+221 33 839 90 00',
+  price: '25000',
+  currency: 'XOF',
+  imageFile: null,
+  imagePreview: null,
+});
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
