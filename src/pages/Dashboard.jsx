@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 
 export default function Dashboard() {
-  const [hotels] = useState([
-    { id: 1, name: 'Hôtel Teranga' },
-    { id: 2, name: 'King Fahd Palace' },
-    { id: 3, name: 'Radisson Blu Hotel' },
-    { id: 4, name: 'Pullman Dakar Teranga' },
-    { id: 5, name: 'Hôtel Lac Rose' },
-    { id: 6, name: 'Hôtel Saly' },
-    { id: 7, name: 'Fathala Wildlife Reserve' },
-    { id: 8, name: 'Lamantin Beach Resort' }
-  ]);
+  const [hotelCount, setHotelCount] = useState(0);
+
+  useEffect(() => {
+    fetch('https://red-product-backend-ddfy.onrender.com/api/hotels')
+      .then((res) => res.json())
+      .then((data) => setHotelCount(data.length))
+      .catch((err) => console.error(err));
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
   };
 
-  const hotelCount = hotels.length < 10 ? `0${hotels.length}` : hotels.length;
+  const displayCount = hotelCount < 10 ? `0${hotelCount}` : hotelCount;
 
   return (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f3f4f6', fontFamily: 'sans-serif' }}>
@@ -138,19 +136,19 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Hôtels */}
-<div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-  <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
-    <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-  </div>
-  <div>
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-      <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>08</span>
-      <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Hôtels</span>
-    </div>
-    <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Nombre total d'hôtels enregistrés</p>
-  </div>
-</div>
+            {/* Hôtels - DYNAMIQUE */}
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', flexShrink: 0 }}>
+                <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <span style={{ fontSize: '20px', fontWeight: '700', color: '#1f2937' }}>{displayCount}</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Hôtels</span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#9ca3af', margin: '2px 0 0 0' }}>Nombre total d'hôtels enregistrés</p>
+              </div>
+            </div>
 
             {/* 6. Entités */}
             <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
