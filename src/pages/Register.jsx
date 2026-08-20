@@ -31,7 +31,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/register', {
+      const response = await fetch('https://red-product-backend-ddfy.onrender.com/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export default function Register() {
         throw new Error(data.message || "Erreur lors de l'inscription");
       }
 
-      navigate('/login');
+      navigate('/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -63,7 +63,6 @@ export default function Register() {
       className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-cover bg-center bg-no-repeat relative"
       style={{ backgroundImage: `url('/images/bg-pattern.png')` }}
     >
-      {/* Logo et Titre SUR LA PAGE (au-dessus du bloc blanc) */}
       <div className="flex items-center justify-center gap-3 mb-6">
         <img 
           src="/images/logo.png" 
@@ -75,7 +74,6 @@ export default function Register() {
         </h1>
       </div>
 
-      {/* Carte blanche du formulaire */}
       <div className="relative z-10 bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
         <h2 className="text-gray-600 text-sm mb-6 text-center">
           Inscrivez-vous en tant que Admin
@@ -152,7 +150,7 @@ export default function Register() {
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-600">
             Vous avez déjà un compte ?{' '}
-            <Link to="/login" className="text-[#E9B949] font-medium">
+            <Link to="/" className="text-[#E9B949] font-medium">
               Se connecter
             </Link>
           </p>
