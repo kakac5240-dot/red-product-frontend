@@ -70,7 +70,7 @@ const DEFAULT_HOTELS = [
 ];
 
 export default function HotelList() {
-  const [hotels, setHotels] = useState(DEFAULT_HOTELS);
+  const [hotels, setHotels] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -100,7 +100,7 @@ export default function HotelList() {
           }
         }
       } catch (err) {
-        console.log("Utilisation des hôtels par défaut", err);
+        console.log("Erreur de chargement", err);
       }
     };
 
